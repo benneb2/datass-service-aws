@@ -1,0 +1,13 @@
+{
+  "name": "datass-api",
+  "version": "1.0.0",
+  "dependencies": {
+    "moment": "^2.16.0"
+  },
+  "description": "Datass serverless API",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "benneb2@gmail.com"
+}

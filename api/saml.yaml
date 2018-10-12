@@ -1,0 +1,59 @@
+Transform: 'AWS::Serverless-2016-10-31'
+Parameters:
+    SamMultipler:
+        Description: "Datass serverless api"
+        Type: "String"
+    OriginUrl:
+        Description: "The origin url to allow CORS requests from. This will be the base URL of your static SAM website."
+        Type: "String"
+Resources:
+  users:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handler.users
+      Runtime: nodejs8.10
+      CodeUri: .
+      Description: datass API
+      MemorySize: 512
+      Timeout: 10
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'dynamodb:GetItem'
+                - 'dynamodb:PutItem'
+                - 'dynamodb:Scan'
+              Resource:
+                'Fn::Join':
+                  - ''
+                  - - 'arn:aws:dynamodb:'
+                    - Ref: 'AWS::Region'
+                    - ':'
+                    - Ref: 'AWS::AccountId'
+                    - ':table/usersTables'
+      Events:
+        ApiPost:
+          Type: Api
+          Properties:
+            Path: /users
+            Method: POST
+        ApiGet:
+          Type: Api
+          Properties:
+            Path: /users/{recipient}
+            Method: ANY
+
+  usersTables:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: users
+      AttributeDefinitions:
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: email
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1

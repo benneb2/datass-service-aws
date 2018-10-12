@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Main template for a CI/CD Serverless application."
+Parameters:
+  AppName:
+    Type: String
+    Description: Name of the application.
+    MinLength: "1"
+    MaxLength: "80"
+    AllowedPattern: "[A-Za-z0-9-]+"
+    ConstraintDescription: Malformed input parameter. AppName must only contain upper and lower case letters, numbers, and -.
+  SAMInputFile:
+    Type: String
+    Description: The filename for the SAM file.
+    Default: saml.yaml
+  SAMOutputFile:
+    Type: String
+    Description: The filename for the output SAM file from the buildspec file.
+    Default: post-saml.yaml
+  StagingFile:
+    Type: String
+    Description: The cloudformation staging file. Leave empty if no staging file is needed.
+    Default: beta.json
+  CodeBuildImage:
+    Type: String
+    Default: "aws/codebuild/nodejs:8.11.0"
+    Description: Image used for CodeBuild project.
+  BitbucketRepoName:
+    Type: String
+    Description: The Bitbucket repo name
+  BitbucketRepoBranch:
+    Type: String
+    Description: The Bitbucket repo branch code pipelines should watch for changes on
+    Default: master
+  BitbucketUser:
+    Type: String
+    Description: Bitbucket UserName. This username must have access to the BitbucketToken.
+  BitbucketToken:
+    NoEcho: true
+    Type: String
+    Description: "Secret. OAuthToken with access to Repo. Long string of characters and digits. Go to https://Bitbucket.com/settings/tokens"
+Resources:
+  ServerlessRoles:
+    Type: "AWS::CloudFormation::Stack"
+    Properties:
+      Parameters:
+        AppName: !Ref AppName
+      TemplateURL: "https://awscomputeblogimages.s3-us-west-2.amazonaws.com/samfarm-pipeline-roles.yaml"
+  ServerlessPipeline:
+    Type: "AWS::CloudFormation::Stack"
+    DependsOn: [ServerlessRoles]
+    Properties:
+      Parameters:
+        AppName: !Ref AppName
+        SAMInputFile: !Ref SAMInputFile
+        SAMOutputFile: !Ref SAMOutputFile
+        StagingFile: !Ref StagingFile
+        CodeBuildImage: !Ref CodeBuildImage
+        BitbucketRepoName: !Ref BitbucketRepoName
+        BitbucketRepoBranch: !Ref BitbucketRepoBranch
+        BitbucketUser: !Ref BitbucketUser
+        BitbucketToken: !Ref BitbucketToken
+        CodePipelineRole: !GetAtt ServerlessRoles.Outputs.CodePipelineRole
+        CloudformationRole: !GetAtt ServerlessRoles.Outputs.CloudformationDeployRole
+        CodeBuildRole: !GetAtt ServerlessRoles.Outputs.CodeBuildRole
+      TemplateURL: "https://awscomputeblogimages.s3-us-west-2.amazonaws.com/samfarm-pipeline.yaml"

@@ -19,7 +19,7 @@ Parameters:
   StagingFile:
     Type: String
     Description: The cloudformation staging file. Leave empty if no staging file is needed.
-    Default: beta.json
+    Default: api/beta.json
   CodeBuildImage:
     Type: String
     Default: "aws/codebuild/nodejs:8.11.0"
@@ -44,7 +44,7 @@ Resources:
     Properties:
       Parameters:
         AppName: !Ref AppName
-      TemplateURL: "https://github.com/benneb2/datass-service-aws/blob/master/pipeline/pipeline-roles.yaml"
+      TemplateURL: "https://s3.amazonaws.com/datass-serverless-stack-s3bucket-nafy59vq6i4a/pipeline-roles.yaml"
   ServerlessPipeline:
     Type: "AWS::CloudFormation::Stack"
     DependsOn: [ServerlessRoles]
@@ -62,4 +62,4 @@ Resources:
         CodePipelineRole: !GetAtt ServerlessRoles.Outputs.CodePipelineRole
         CloudformationRole: !GetAtt ServerlessRoles.Outputs.CloudformationDeployRole
         CodeBuildRole: !GetAtt ServerlessRoles.Outputs.CodeBuildRole
-      TemplateURL: "https://github.com/benneb2/datass-service-aws/blob/master/pipeline/pipeline.yaml"
+      TemplateURL: "https://s3.amazonaws.com/datass-serverless-stack-s3bucket-nafy59vq6i4a/pipeline.yaml"

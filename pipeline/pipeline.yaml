@@ -19,10 +19,10 @@ Parameters:
   StagingFile:
     Type: String
     Description: The cloudformation staging file. Leave empty if no staging file is needed.
-    Default: beta.json
+    Default: api/beta.json
   CodeBuildImage:
     Type: String
-    Default: "aws/codebuild/nodejs:7.0.0"
+    Default: "aws/codebuild/nodejs:8.11.0"
     Description: Image used for CodeBuild project.
   GitHubRepoName:
     Type: String

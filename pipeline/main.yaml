@@ -24,20 +24,20 @@ Parameters:
     Type: String
     Default: "aws/codebuild/nodejs:8.11.0"
     Description: Image used for CodeBuild project.
-  BitbucketRepoName:
+  GitHubRepoName:
     Type: String
-    Description: The Bitbucket repo name
-  BitbucketRepoBranch:
+    Description: The GitHub repo name
+  GitHubRepoBranch:
     Type: String
-    Description: The Bitbucket repo branch code pipelines should watch for changes on
+    Description: The GitHub repo branch code pipelines should watch for changes on
     Default: master
-  BitbucketUser:
+  GitHubUser:
     Type: String
-    Description: Bitbucket UserName. This username must have access to the BitbucketToken.
-  BitbucketToken:
+    Description: GitHub UserName. This username must have access to the GitHubToken.
+  GitHubToken:
     NoEcho: true
     Type: String
-    Description: "Secret. OAuthToken with access to Repo. Long string of characters and digits. Go to https://Bitbucket.com/settings/tokens"
+    Description: "Secret. OAuthToken with access to Repo. Long string of characters and digits. Go to https://github.com/settings/tokens"
 Resources:
   ServerlessRoles:
     Type: "AWS::CloudFormation::Stack"
@@ -55,10 +55,10 @@ Resources:
         SAMOutputFile: !Ref SAMOutputFile
         StagingFile: !Ref StagingFile
         CodeBuildImage: !Ref CodeBuildImage
-        BitbucketRepoName: !Ref BitbucketRepoName
-        BitbucketRepoBranch: !Ref BitbucketRepoBranch
-        BitbucketUser: !Ref BitbucketUser
-        BitbucketToken: !Ref BitbucketToken
+        GitHubRepoName: !Ref GitHubRepoName
+        GitHubRepoBranch: !Ref GitHubRepoBranch
+        GitHubUser: !Ref GitHubUser
+        GitHubToken: !Ref GitHubToken
         CodePipelineRole: !GetAtt ServerlessRoles.Outputs.CodePipelineRole
         CloudformationRole: !GetAtt ServerlessRoles.Outputs.CloudformationDeployRole
         CodeBuildRole: !GetAtt ServerlessRoles.Outputs.CodeBuildRole

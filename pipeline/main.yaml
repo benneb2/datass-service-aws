@@ -11,11 +11,11 @@ Parameters:
   SAMInputFile:
     Type: String
     Description: The filename for the SAM file.
-    Default: saml.yaml
+    Default: api/saml.yaml
   SAMOutputFile:
     Type: String
     Description: The filename for the output SAM file from the buildspec file.
-    Default: post-saml.yaml
+    Default: api/post-saml.yaml
   StagingFile:
     Type: String
     Description: The cloudformation staging file. Leave empty if no staging file is needed.
@@ -44,7 +44,7 @@ Resources:
     Properties:
       Parameters:
         AppName: !Ref AppName
-      TemplateURL: "https://awscomputeblogimages.s3-us-west-2.amazonaws.com/samfarm-pipeline-roles.yaml"
+      TemplateURL: "https://github.com/benneb2/datass-service-aws/blob/master/pipeline/pipeline-roles.yaml"
   ServerlessPipeline:
     Type: "AWS::CloudFormation::Stack"
     DependsOn: [ServerlessRoles]
@@ -62,4 +62,4 @@ Resources:
         CodePipelineRole: !GetAtt ServerlessRoles.Outputs.CodePipelineRole
         CloudformationRole: !GetAtt ServerlessRoles.Outputs.CloudformationDeployRole
         CodeBuildRole: !GetAtt ServerlessRoles.Outputs.CodeBuildRole
-      TemplateURL: "https://awscomputeblogimages.s3-us-west-2.amazonaws.com/samfarm-pipeline.yaml"
+      TemplateURL: "https://github.com/benneb2/datass-service-aws/blob/master/pipeline/pipeline.yaml"
